@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1F2A44"/>
+      <stop offset="1" stop-color="#0E1424"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD66B"/>
+      <stop offset="1" stop-color="#FF9F43"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- commit graph -->
+  <line x1="92" y1="36" x2="92" y2="220" stroke="#5B6B8C" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="92" cy="128" r="30" fill="#0E1424" stroke="#4FD1A5" stroke-width="14"/>
+  <!-- message lines -->
+  <rect x="140" y="152" width="80" height="14" rx="7" fill="#C9D3E6"/>
+  <rect x="140" y="180" width="52" height="14" rx="7" fill="#7C8BA8"/>
+  <!-- sparkle -->
+  <path d="M176 40 C181 72 188 79 220 84 C188 89 181 96 176 128 C171 96 164 89 132 84 C164 79 171 72 176 40 Z" fill="url(#spark)"/>
+</svg>

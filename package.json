@@ -2,13 +2,21 @@
   "name": "ve01-commit-message-generator",
   "displayName": "ScaleXY's Commit Message Generator",
   "description": "Generate commit messages from your Git changes with your local Codex CLI.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "ScaleXY",
   "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#1F2A44",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
-  "repository": { "type": "git", "url": "https://github.com/ScaleXY/ve01-generate-commit-message.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScaleXY/ve01-generate-commit-message.git"
+  },
   "categories": [
     "SCM Providers",
     "AI"
