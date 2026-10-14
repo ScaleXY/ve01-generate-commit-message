@@ -65,7 +65,7 @@ assert.match(prompt, /<git_diff>\n-old\n\+new\n<\/git_diff>/);
 assert.match(prompt, /Return only the final commit message\./);
 assert.doesNotMatch(buildCodexPrompt(changes({}), {}, "  "), /Additional instructions/);
 
-assert.deepEqual(buildCodexArgs({ codexPath: "codex", model: "", reasoningEffort: "", instructions: "" }, "/tmp/out"), [
+assert.deepEqual(buildCodexArgs({ codexPath: "codex", model: "", reasoningEffort: "", fastMode: false, instructions: "" }, "/tmp/out"), [
   "exec",
   "--ephemeral",
   "--skip-git-repo-check",
@@ -79,10 +79,18 @@ assert.deepEqual(buildCodexArgs({ codexPath: "codex", model: "", reasoningEffort
 ]);
 
 const argsWithModel = buildCodexArgs(
-  { codexPath: "codex", model: " gpt-5.5 ", reasoningEffort: "low", instructions: "" },
+  { codexPath: "codex", model: " gpt-5.5 ", reasoningEffort: "low", fastMode: true, instructions: "" },
   "/tmp/out"
 );
-assert.deepEqual(argsWithModel.slice(-5), ["--model", "gpt-5.5", "--config", 'model_reasoning_effort="low"', "-"]);
+assert.deepEqual(argsWithModel.slice(-7), [
+  "--model",
+  "gpt-5.5",
+  "--config",
+  'model_reasoning_effort="low"',
+  "--config",
+  'service_tier="fast"',
+  "-"
+]);
 
 assert.equal(normalizeCommitMessage("```text\nfeat(auth): update login\n```"), "feat(auth): update login");
 assert.equal(normalizeCommitMessage("Commit message: fix: handle missing token"), "fix: handle missing token");

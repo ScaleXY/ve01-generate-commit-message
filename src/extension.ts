@@ -72,7 +72,9 @@ async function selectModel(): Promise<void> {
     ...models.map((model) => ({
       label: model.displayName,
       description: model.slug === current ? `${model.slug} · current` : model.slug,
-      detail: model.description,
+      detail: [model.description, model.supportsFastMode ? "Supports fast mode." : undefined]
+        .filter(Boolean)
+        .join(" "),
       value: model.slug
     })),
     {
@@ -109,6 +111,17 @@ async function selectModel(): Promise<void> {
   );
 }
 
+async function toggleFastMode(): Promise<void> {
+  const configuration = getConfiguration();
+  const enabled = !configuration.get<boolean>("fastMode", false);
+  await configuration.update("fastMode", enabled, vscode.ConfigurationTarget.Global);
+  vscode.window.showInformationMessage(
+    enabled
+      ? "Fast mode is on. Codex responds faster but uses more of your usage limit."
+      : "Fast mode is off."
+  );
+}
+
 async function generateCommitMessage(): Promise<void> {
   const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
   if (!workspaceFolder) {
@@ -131,9 +144,10 @@ async function generateCommitMessage(): Promise<void> {
 
         const configuration = getConfiguration();
         const provider = createCommitMessageProvider(configuration.get<CommitMessageProviderId>("provider", "codex"), {
-          codexPath: configuration.get<string>("codexPath", "codex"),
+          codexPath: configuration.get<string>("codexPath", ""),
           model: configuration.get<string>("model", ""),
           reasoningEffort: configuration.get<string>("reasoningEffort", ""),
+          fastMode: configuration.get<boolean>("fastMode", false),
           instructions: configuration.get<string>("instructions", "")
         });
 
@@ -143,7 +157,7 @@ async function generateCommitMessage(): Promise<void> {
           return {
             message: await provider.generate(changes, {
               style: configuration.get<CommitStyle>("style", "conventional"),
-              includeBody: configuration.get<boolean>("includeBody", false),
+              includeBody: configuration.get<boolean>("includeBody", true),
               signal: abortController.signal
             }),
             repositoryRoot: changes.repositoryRoot
@@ -174,6 +188,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("commitMessageGenerator.generate", generateCommitMessage),
     vscode.commands.registerCommand("commitMessageGenerator.selectModel", selectModel),
+    vscode.commands.registerCommand("commitMessageGenerator.toggleFastMode", toggleFastMode),
     vscode.commands.registerCommand("commitMessageGenerator.editInstructions", () =>
       vscode.commands.executeCommand("workbench.action.openSettings", "commitMessageGenerator.instructions")
     )

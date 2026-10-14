@@ -114,7 +114,7 @@ async function getUntrackedFiles(root: string): Promise<ChangedFile[]> {
 async function getDiff(root: string, mode: ChangeMode, untracked: ChangedFile[]): Promise<string> {
   const diffArgs = mode === "staged" ? ["diff", "--cached"] : ["diff"];
   const trackedDiff = await runGit(
-    [...diffArgs, "--no-ext-diff", "--unified=0", "--no-renames"],
+    [...diffArgs, "--no-ext-diff", "--unified=3", "--no-renames"],
     root
   );
 
