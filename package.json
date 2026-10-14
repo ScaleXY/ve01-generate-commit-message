@@ -1,0 +1,149 @@
+{
+  "name": "ve01-commit-message-generator",
+  "displayName": "ScaleXY's Commit Message Generator",
+  "description": "Generate commit messages from your Git changes with your local Codex CLI.",
+  "version": "0.1.0",
+  "publisher": "ScaleXY",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "repository": { "type": "git", "url": "https://github.com/ScaleXY/ve01-generate-commit-message.git" },
+  "categories": [
+    "SCM Providers",
+    "AI"
+  ],
+  "keywords": [
+    "git",
+    "commit",
+    "commit message",
+    "conventional commits",
+    "codex"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "commitMessageGenerator.generate",
+        "title": "Generate Commit Message",
+        "category": "Commit Message Generator",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "commitMessageGenerator.selectModel",
+        "title": "Select Codex Model",
+        "category": "Commit Message Generator"
+      },
+      {
+        "command": "commitMessageGenerator.editInstructions",
+        "title": "Edit Instructions",
+        "category": "Commit Message Generator"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "commitMessageGenerator.generate",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Commit Message Generator",
+      "properties": {
+        "commitMessageGenerator.provider": {
+          "type": "string",
+          "enum": [
+            "codex",
+            "local"
+          ],
+          "enumDescriptions": [
+            "Generate the message with the Codex CLI installed on this machine.",
+            "Generate the message with built-in heuristics, without sending changes anywhere."
+          ],
+          "default": "codex",
+          "order": 0,
+          "description": "How commit messages are generated."
+        },
+        "commitMessageGenerator.model": {
+          "type": "string",
+          "default": "",
+          "order": 1,
+          "markdownDescription": "The model Codex uses, passed as `codex exec --model`. Leave blank to use the model from your Codex `config.toml`. Run **Commit Message Generator: Select Codex Model** to pick from the models available to your account."
+        },
+        "commitMessageGenerator.instructions": {
+          "type": "string",
+          "default": "",
+          "editPresentation": "multilineText",
+          "order": 2,
+          "markdownDescription": "Extra instructions added to the Codex prompt, for example `Keep the subject under 50 characters` or `Reference the ticket ID from the branch name`."
+        },
+        "commitMessageGenerator.style": {
+          "type": "string",
+          "enum": [
+            "conventional",
+            "plain"
+          ],
+          "enumDescriptions": [
+            "Use a Conventional Commits prefix such as feat(scope): ...",
+            "Generate a sentence without a type prefix."
+          ],
+          "default": "conventional",
+          "order": 3,
+          "description": "The format used for generated commit messages."
+        },
+        "commitMessageGenerator.includeBody": {
+          "type": "boolean",
+          "default": false,
+          "order": 4,
+          "description": "Include a short body below the subject line."
+        },
+        "commitMessageGenerator.reasoningEffort": {
+          "type": "string",
+          "enum": [
+            "",
+            "minimal",
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ],
+          "enumItemLabels": [
+            "Codex default",
+            "Minimal",
+            "Low",
+            "Medium",
+            "High",
+            "Extra high"
+          ],
+          "default": "",
+          "order": 5,
+          "description": "The reasoning effort Codex uses. The selected model must support it."
+        },
+        "commitMessageGenerator.codexPath": {
+          "type": "string",
+          "default": "codex",
+          "order": 6,
+          "scope": "machine",
+          "markdownDescription": "Path to the Codex CLI executable. Change this if `codex` is not on the PATH that VS Code sees."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "compile:test": "tsc -p ./tsconfig.test.json",
+    "test": "npm run compile:test && node ./out-test/test/generator.test.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.3.3"
+  }
+}

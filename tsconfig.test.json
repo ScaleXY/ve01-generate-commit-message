@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "out-test",
+    "rootDir": "."
+  },
+  "include": [
+    "src/types.ts",
+    "src/generator.ts",
+    "src/providers/**/*.ts",
+    "test/**/*.ts"
+  ]
+}
